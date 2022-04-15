@@ -18,5 +18,7 @@ int main(int argc, char *argv[]) {
 
   Sudoku.printBoard();
 
+  Sudoku.backTracking();
+
   std::cout << "Test Complete\n";
 }

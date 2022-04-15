@@ -20,6 +20,50 @@ class Board {
 
     void printBoard();
 
+    void backTracking();
+
+    // Return true if the same val is in that same vertical line
+    bool cheackVertical(char val, int col) {
+      for (int i = 0; i < (size / 3); i ++) {
+        if (value[i][col] == val)
+          return true;
+      }
+      return false;
+    }
+
+    // Return true if the same val is in that same Horizontal line
+    bool checkHorizontal(char val, int row) {
+      for (int i = 0; i < (size / 3); i ++) {
+        if (value[row][i] == val)
+          return true;
+      }
+      return false;
+    }
+
+    // Return true if the same val is in that same local area of the board
+    // Row and Col are the top left of the 3x3 section of the board
+    bool checkLocal(char val, int row, int col) {
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          if (value[row + i][col + j] == val) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    bool stillMissingVals() {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+          if (value[i][j] == 'X') {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
   private:
     int size = 9;
     char** value = nullptr;
@@ -77,4 +121,12 @@ void Board::printBoard() {
       count2 = 0;
     }
   }
+}
+
+void Board::backTracking() {
+  if(stillMissingVals()) {
+    std::cout << "Find next missing\n";
+  }
+  else
+    std::cout << "We are done!!\n";
 }
