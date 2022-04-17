@@ -28,16 +28,15 @@ class Board {
       int col2 = col - col % 3;
       if (checkLocal(val, row2, col2)) {
         return false;
-      } else if (checkVertical(val, row)) {
-        return false;
-      } else if (checkHorizontal(val, col)) {
-        return false;
-      } else if (value[row][col] != 'X') {
-        return false;
-      } else {
-        //std::cout << "Clear in: " << row << col << "\n";
-        return true;
       }
+      if (checkVertical(val, row)) {
+        return false;
+      }
+      if (checkHorizontal(val, col)) {
+        return false;
+      }  //std::cout << "Clear in: " << row << col << "\n";
+
+      return true;
     }
 
     // Return true if the same val is in that same vertical line
@@ -157,18 +156,18 @@ bool Board::backTracking() {
       char temp = current+'0';
       //std::cout << "current = " << current << "\n";
       //std::cout << "Checking " << row << col << "\n";
-      if (checkConstraints(temp, row, col) == true) {
+      if (checkConstraints(temp, row, col)) {
             value[row][col] = temp;
             //std::cout << "Assinging value = " << value[row][col] << "\n";
 
             if(backTracking() == true) {
-              //std::cout << "Back track == true!\n";
               return true;
             }
             // Try the next value
             value[row][col] = 'X';
       } // end if
     } // end for
+    //return false;
   } // end else
   return false;
 } // end backTracking

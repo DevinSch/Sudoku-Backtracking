@@ -18,18 +18,14 @@ int main(int argc, char *argv[]) {
   Sudoku.readBoard(file);
 
   Sudoku.printBoard();
-  /*int t, p;
-  std::cout << Sudoku.stillMissingVals(t,p) << "\n\n";
-  std::cout << Sudoku.checkLocal('1', 2, 4) << "\n\n";
-  std::cout << Sudoku.checkHorizontal('3', 0) << "\n\n";
-  std::cout << Sudoku.checkVertical('3', 0) << "\n\n";
+  int t, p;
+  std::cout << "Missing vals " << Sudoku.stillMissingVals(t,p) << "\n";
+  std::cout << "check local " << Sudoku.checkLocal('1', 0, 0) << "\n";
+  std::cout << "Check Horizontal " << Sudoku.checkHorizontal('2', 0) << "\n";
+  std::cout << "Check vertical " << Sudoku.checkVertical('1', 0) << "\n";
 
-  int j = 5;
-  char temp = j+'0';
-  std::cout << "j = " << temp << "\n\n";
+  //std::cout << Sudoku.checkConstraints(temp, 0, 0) << "\n\n";
 
-  std::cout << Sudoku.checkConstraints(temp, 0, 0) << "\n\n";
-  */
 
   if (Sudoku.backTracking() == true) {
     std::cout << "We did it!\n";
