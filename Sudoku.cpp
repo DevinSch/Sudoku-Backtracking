@@ -5,35 +5,20 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#define size 9 // All Sudoku games are a 9x9 grid
+const int size = 9; // All Sudoku games are a 9x9 grid
 
 //*****************************Functions***************************************
-// Display the current Sudoku game board
 void printBoard(int square[size][size]);
-
-// Read in the game to solve from a file, file given as argument
 void readBoard(std::string fileName, int square[size][size]);
-
-// Checks for any missing values, returning row and col of next missing value
 bool missingValues(int square[size][size], int& row, int& col);
-
-// Checks all contstraints
 bool checkConstraints(int square[size][size], int row, int col, int val);
-
-// Check is the same value is alreay within that row
 bool checkHorizontal(int square[size][size], int row, int val);
-
-// Check is the same value is alreay within that col
 bool checkVertical(int square[size][size], int col, int val);
-
-// Checks the 3x3 grid to see if the value as already been used
 bool checkLocal(int square[size][size], int row, int col, int val);
-
-// BackTracking search, calls checkConstraints to solve the puzzle
 bool backTracking(int square[size][size]);
 //*****************************Functions***************************************
 
-
+// Calls functions to read, solve and print the results of the given board
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cout << "No file given!\n";
@@ -57,6 +42,7 @@ int main(int argc, char *argv[]) {
   }
 }
 
+// Read in the game to solve from a file, file given as argument
 void readBoard(std::string fileName, int square[size][size]) {
   std::ifstream fin;
   fin.open(fileName);
@@ -71,6 +57,7 @@ void readBoard(std::string fileName, int square[size][size]) {
   fin.close();
 }
 
+// Display the current Sudoku game board
 void printBoard(int square[size][size]) {
   int count = 0;
   int count2 = 0;
@@ -101,6 +88,7 @@ void printBoard(int square[size][size]) {
   }
 }
 
+// Checks for any missing values, returning row and col of next missing value
 bool missingValues(int square[size][size], int& row, int& col) {
   for (row = 0; row < size; row++) {
     for (col = 0; col < size; col++) {
@@ -112,60 +100,74 @@ bool missingValues(int square[size][size], int& row, int& col) {
   return false;
 }
 
+// Checks all contstraints set up by the game Sudoku
 bool checkConstraints(int square[size][size], int row, int col, int val) {
   // Find the start of the local square, check local then checks 3x3 from there
   int row2 = row - row % 3;
   int col2 = col - col % 3;
-  return !checkHorizontal(square, row, val)
-      && !checkVertical(square, col, val)
-      && !checkLocal(square, row2, col2, val);
+  return checkHorizontal(square, row, val)
+      && checkVertical(square, col, val)
+      && checkLocal(square, row2, col2, val);
 }
 
+// Check is the same value is alreay within that row
 bool checkHorizontal(int square[size][size], int row, int val) {
   for (int i = 0; i < size; i++) {
     if (square[row][i] == val) {
-      return true;
+      return false;
     }
   }
-  return false;
+  return true;
 }
 
+// Check is the same value is alreay within that col
 bool checkVertical(int square[size][size], int col, int val) {
   for (int i = 0; i < size; i++) {
     if (square[i][col] == val) {
-      return true;
+      return false;
     }
   }
-  return false;
+  return true;
 }
 
+// Checks the 3x3 grid to see if the value as already been used
 bool checkLocal(int square[size][size], int row, int col, int val) {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       if (square[i + row][j + col] == val) {
-        return true;
+        return false;
       }
     }
   }
-  return false;
+  return true;
 }
 
+// BackTracking search, calls checkConstraints to solve the puzzle
 bool backTracking(int square[size][size]) {
   int row, col;
 
+  // Are there still values missing?
   if (missingValues(square, row, col) == false) {
     return true;
   } else {
+    // Try each valid input from 1 to 9
     for (int num = 1; num <= 9; num++) {
+
+      // check all contstraints by the game
       if (checkConstraints(square, row, col, num) == true) {
         square[row][col] = num;
+
+        // try the next space
         if (backTracking(square) == true) {
           return true;
         } else {
+
+          // if the game was not solved unmark and try the next number
           square[row][col] = 0;
         }
       }
     }
   }
+  // No soloution from here, either backtracks or returns no solution
   return false;
 }
